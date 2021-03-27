@@ -1,12 +1,9 @@
 package uiserver
 
 import (
-	"errors"
-	"fmt"
 	"io/fs"
 	"net/http"
 	"net/url"
-	"regexp"
 
 	"github.com/gorilla/mux"
 )
@@ -43,47 +40,6 @@ func (server UIServer) Run(port string) {
 	_ = http.ListenAndServe(port, server.mux)
 }
 
-func (server UIServer) Get(path string, handler handler) {
-	server.addHandler(path, "GET", handler)
-}
-
-func (server UIServer) Post(path string, handler handler) {
-	server.addHandler(path, "POST", handler)
-}
-
-func (server UIServer) Put(path string, handler handler) {
-	server.addHandler(path, "PUT", handler)
-}
-
-func (server UIServer) Patch(path string, handler handler) {
-	server.addHandler(path, "PATCH", handler)
-}
-
-func (server UIServer) Delete(path string, handler handler) {
-	server.addHandler(path, "DELETE", handler)
-}
-
-func (server UIServer) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	path := request.URL.Path
-	method := request.Method
-
-	item, err := server.handlerFor(path, method)
-
-	if err != nil {
-		fmt.Println("Sorry, I don't know how to handle", method, "for path", path)
-
-		writer.WriteHeader(http.StatusInternalServerError)
-	} else {
-		path := request.URL.Path
-		method := request.Method
-		vars := mux.Vars(request)
-		query := request.URL.Query()
-
-		context := Context{item.route, method, path, vars, query, writer, request}
-
-		item.handler(context)
-	}
-}
 
 // Implementation details
 
@@ -105,31 +61,5 @@ func getUIRoot(ui fs.FS) fs.FS {
 	root, _ := fs.Sub(ui, contentFolder)
 
 	return root
-}
-
-type handler func(context Context)
-
-func (server UIServer) addHandler(route string, method string, handler handler) {
-	path := pathForRoute(route)
-
-	server.handlers = append(server.handlers, pathMethodHandler{route, path, method, handler})
-
-	server.mux.Handle(route, server)
-}
-
-func pathForRoute(route string) string {
-	re := regexp.MustCompile(`{.*?}`)
-
-	return re.ReplaceAllString(route, `{}`)
-}
-
-func (server UIServer) handlerFor(path string, method string) (pathMethodHandler, error) {
-	for _, item := range server.handlers {
-		if item.matchesPathAndMethod(path, method) {
-			return item, nil
-		}
-	}
-
-	return pathMethodHandler{"", "", "", nil}, errors.New(fmt.Sprintf("No handler for %s on %s", method, path))
 }
 
