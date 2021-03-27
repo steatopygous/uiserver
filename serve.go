@@ -1,6 +1,7 @@
 package uiserver
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -27,5 +28,18 @@ func (server UIServer) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 
 		item.handler(context)
 	}
+}
+
+
+// Implementation details
+
+func (server UIServer) handlerFor(path string, method string) (pathMethodHandler, error) {
+	for _, item := range server.handlers {
+		if item.matchesPathAndMethod(path, method) {
+			return item, nil
+		}
+	}
+
+	return pathMethodHandler{"", "", "", nil}, errors.New(fmt.Sprintf("No handler for %s on %s", method, path))
 }
 

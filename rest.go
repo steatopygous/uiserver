@@ -1,8 +1,6 @@
 package uiserver
 
 import (
-	"errors"
-	"fmt"
 	"regexp"
 )
 
@@ -37,16 +35,6 @@ func (server UIServer) addHandler(route string, method string, handler handler) 
 	server.handlers = append(server.handlers, pathMethodHandler{route, path, method, handler})
 
 	server.mux.Handle(route, server)
-}
-
-func (server UIServer) handlerFor(path string, method string) (pathMethodHandler, error) {
-	for _, item := range server.handlers {
-		if item.matchesPathAndMethod(path, method) {
-			return item, nil
-		}
-	}
-
-	return pathMethodHandler{"", "", "", nil}, errors.New(fmt.Sprintf("No handler for %s on %s", method, path))
 }
 
 func pathForRoute(route string) string {
