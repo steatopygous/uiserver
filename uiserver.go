@@ -15,13 +15,13 @@ type UIServer struct {
 }
 
 type Context struct {
-	Route    string
-	Method   string
-	Path     string
-	Vars     map[string]string
-	Query    url.Values
-	Response http.ResponseWriter
-	Request  *http.Request
+	Route   string
+	Method  string
+	Path    string
+	Vars    map[string]string
+	Query   url.Values
+	Writer  http.ResponseWriter
+	Request *http.Request
 }
 
 func New(ui fs.FS) UIServer {
