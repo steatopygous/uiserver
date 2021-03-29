@@ -4,32 +4,32 @@ import (
 	"regexp"
 )
 
-func (server UIServer) Get(path string, handler handler) {
+func (server UIServer) Get(path string, handler Handler) {
 	server.addHandler(path, "GET", handler)
 }
 
-func (server UIServer) Post(path string, handler handler) {
+func (server UIServer) Post(path string, handler Handler) {
 	server.addHandler(path, "POST", handler)
 }
 
-func (server UIServer) Put(path string, handler handler) {
+func (server UIServer) Put(path string, handler Handler) {
 	server.addHandler(path, "PUT", handler)
 }
 
-func (server UIServer) Patch(path string, handler handler) {
+func (server UIServer) Patch(path string, handler Handler) {
 	server.addHandler(path, "PATCH", handler)
 }
 
-func (server UIServer) Delete(path string, handler handler) {
+func (server UIServer) Delete(path string, handler Handler) {
 	server.addHandler(path, "DELETE", handler)
 }
 
 
 // Implementation details
 
-type handler func(context Context)
+type Handler func(context Context)
 
-func (server UIServer) addHandler(route string, method string, handler handler) {
+func (server UIServer) addHandler(route string, method string, handler Handler) {
 	path := pathForRoute(route)
 
 	server.handlers = append(server.handlers, pathMethodHandler{route, path, method, handler})

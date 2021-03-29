@@ -3,10 +3,10 @@ package uiserver
 import "strings"
 
 type pathMethodHandler struct {
-	route string
-	path string
-	method string
-	handler handler
+	route   string
+	path    string
+	method  string
+	handler Handler
 }
 
 func(pmh pathMethodHandler) matchesPathAndMethod(path string, method string) bool {

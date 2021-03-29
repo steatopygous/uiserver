@@ -40,6 +40,6 @@ func (server UIServer) handlerFor(path string, method string) (pathMethodHandler
 		}
 	}
 
-	return pathMethodHandler{"", "", "", nil}, errors.New(fmt.Sprintf("No handler for %s on %s", method, path))
+	return pathMethodHandler{"", "", "", nil}, errors.New(fmt.Sprintf("No Handler for %s on %s", method, path))
 }
 
