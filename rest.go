@@ -4,31 +4,39 @@ import (
 	"regexp"
 )
 
-func (server UIServer) Get(path string, handler Handler) {
-	server.addHandler(path, "GET", handler)
+// Get() registers a handler for GET calls on given route.
+func (server UIServer) Get(route string, handler Handler) {
+	server.addHandler(route, "GET", handler)
 }
 
-func (server UIServer) Post(path string, handler Handler) {
-	server.addHandler(path, "POST", handler)
+// Post() registers a handler for POST calls on given route.
+func (server UIServer) Post(route string, handler Handler) {
+	server.addHandler(route, "POST", handler)
 }
 
-func (server UIServer) Put(path string, handler Handler) {
-	server.addHandler(path, "PUT", handler)
+// Put() registers a handler for PUT calls on given route.
+func (server UIServer) Put(route string, handler Handler) {
+	server.addHandler(route, "PUT", handler)
 }
 
-func (server UIServer) Patch(path string, handler Handler) {
-	server.addHandler(path, "PATCH", handler)
+// Patch() registers a handler for PATCH calls on the given route
+func (server UIServer) Patch(route string, handler Handler) {
+	server.addHandler(route, "PATCH", handler)
 }
 
-func (server UIServer) Delete(path string, handler Handler) {
-	server.addHandler(path, "DELETE", handler)
+// Patch() registers a handler for PATCH calls on given route.
+func (server UIServer) Delete(route string, handler Handler) {
+	server.addHandler(route, "DELETE", handler)
 }
 
 
-// Implementation details
 
+// Handler is similar to http.Handler, but provides for functions that
+// accept a uiserver.Context rather than http.ResponseWriter and http.Request.
 type Handler func(context Context)
 
+
+// addHandler() registers a handler for a route and method.
 func (server UIServer) addHandler(route string, method string, handler Handler) {
 	path := pathForRoute(route)
 
@@ -36,6 +44,11 @@ func (server UIServer) addHandler(route string, method string, handler Handler) 
 
 	server.mux.Handle(route, server)
 }
+
+
+// pathForRoute() replaces any route variables with just a placeholder.  We convert the
+// registered route into this form to make comparison of incoming paths to routes independent
+// of the specific route variable values.
 
 func pathForRoute(route string) string {
 	re := regexp.MustCompile(`{.*?}`)

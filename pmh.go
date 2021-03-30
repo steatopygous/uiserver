@@ -2,12 +2,19 @@ package uiserver
 
 import "strings"
 
+// pathMethodHandler collects together a route, path and method, along with the
+// handler function for the given route + method.
+
 type pathMethodHandler struct {
 	route   string
 	path    string
 	method  string
 	handler Handler
 }
+
+
+// matchesPathAndMethod() checks whether a given pathMethodHandler instance corresponds
+// to the provided path and method parameters.
 
 func(pmh pathMethodHandler) matchesPathAndMethod(path string, method string) bool {
 	pathParts := strings.Split(path, "/")
