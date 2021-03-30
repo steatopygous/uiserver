@@ -49,7 +49,6 @@ func (server UIServer) addHandler(route string, method string, handler Handler) 
 // pathForRoute() replaces any route variables with just a placeholder.  We convert the
 // registered route into this form to make comparison of incoming paths to routes independent
 // of the specific route variable values.
-
 func pathForRoute(route string) string {
 	re := regexp.MustCompile(`{.*?}`)
 

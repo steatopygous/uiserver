@@ -11,7 +11,6 @@ import (
 
 // ServeHTTP() implements the http.Handler interface.  It routes the request to the
 // appropriate handler, based on the path and method.
-
 func (server UIServer) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	path := request.URL.Path
 	method := request.Method
@@ -36,7 +35,6 @@ func (server UIServer) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 
 
 // handlerFor() finds the registered handler function, if any, for the given path and method.
-
 func (server UIServer) handlerFor(path string, method string) (pathMethodHandler, error) {
 	for _, item := range server.handlers {
 		if item.matchesPathAndMethod(path, method) {

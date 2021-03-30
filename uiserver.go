@@ -11,7 +11,6 @@ import (
 
 // UIServer is the type returned by New(). All of its fields are private and purely
 // for use by uiserver's implementation.
-
 type UIServer struct {
 	handlers []pathMethodHandler
 	root     fs.FS
@@ -25,7 +24,6 @@ type UIServer struct {
 //
 // It also surfaces data from the underlying gorilla/mux router, including the Request, Writer
 // along with a map of the route variables and the Query parameters.
-
 type Context struct {
 	Route   string
 	Method  string
@@ -40,7 +38,6 @@ type Context struct {
 // New() constructs a new UIServer that uses the provided file system as the source for
 // the UI's content.  Using this, the developer will make calls to the various REST verb
 // functions to register handlers for the various resource paths the UI code can access.
-
 func New(ui fs.FS) UIServer {
 	root := getUIRoot(ui)
 
@@ -53,7 +50,6 @@ func New(ui fs.FS) UIServer {
 
 
 // Run() starts the server running on the specified port.
-
 func (server UIServer) Run(port string) {
 	server.mux.PathPrefix("/").Handler(http.FileServer(http.FS(server.root)))
 
@@ -63,7 +59,6 @@ func (server UIServer) Run(port string) {
 
 // getUIRoot() extracts the top-level folder from the UI file system.  This allows
 // all URLs referenced in the content to be relative to "/", rather than that folder.
-
 func getUIRoot(ui fs.FS) fs.FS {
 	// We expect the top level of the file system to contain a single folder
 	// that contains all of the UI content, potentially in sub-folders.
