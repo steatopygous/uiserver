@@ -1,6 +1,7 @@
 package uiserver
 
 import (
+	"fmt"
 	"io/fs"
 	"net/http"
 	"net/url"
@@ -50,10 +51,17 @@ func New(ui fs.FS) UIServer {
 
 
 // Run() starts the server running on the specified port.
-func (server UIServer) Run(port string) {
+func (server UIServer) Run(port string) error {
 	server.mux.PathPrefix("/").Handler(http.FileServer(http.FS(server.root)))
 
-	_ = http.ListenAndServe(port, server.mux)
+	err := http.ListenAndServe(port, server.mux)
+
+	if err != nil {
+		fmt.Println("uiserver.Run() - ListenAndServe() returned an error...", err)
+		return err
+	}
+
+	return nil
 }
 
 
