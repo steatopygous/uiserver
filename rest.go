@@ -6,27 +6,27 @@ import (
 )
 
 // Get() registers a handler for GET calls on given route.
-func (server UIServer) Get(route string, handler Handler) {
+func (server *UIServer) Get(route string, handler Handler) {
 	server.addHandler(route, "GET", handler)
 }
 
 // Post() registers a handler for POST calls on given route.
-func (server UIServer) Post(route string, handler Handler) {
+func (server *UIServer) Post(route string, handler Handler) {
 	server.addHandler(route, "POST", handler)
 }
 
 // Put() registers a handler for PUT calls on given route.
-func (server UIServer) Put(route string, handler Handler) {
+func (server *UIServer) Put(route string, handler Handler) {
 	server.addHandler(route, "PUT", handler)
 }
 
 // Patch() registers a handler for PATCH calls on the given route
-func (server UIServer) Patch(route string, handler Handler) {
+func (server *UIServer) Patch(route string, handler Handler) {
 	server.addHandler(route, "PATCH", handler)
 }
 
 // Patch() registers a handler for PATCH calls on given route.
-func (server UIServer) Delete(route string, handler Handler) {
+func (server *UIServer) Delete(route string, handler Handler) {
 	server.addHandler(route, "DELETE", handler)
 }
 
@@ -38,7 +38,7 @@ type Handler func(context Context)
 
 
 // addHandler() registers a handler for a route and method.
-func (server UIServer) addHandler(route string, method string, handler Handler) {
+func (server *UIServer) addHandler(route string, method string, handler Handler) {
 	path := pathForRoute(route)
 
 	fmt.Println("uiserver.addHandler() - before adding", method, "for", path, "handlers =", server.handlers)
