@@ -1,7 +1,6 @@
 package uiserver
 
 import (
-	"fmt"
 	"regexp"
 )
 
