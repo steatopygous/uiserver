@@ -15,21 +15,24 @@ type pathMethodHandler struct {
 // matchesPathAndMethod() checks whether a given pathMethodHandler instance corresponds
 // to the provided path and method parameters.
 func(pmh pathMethodHandler) matchesPathAndMethod(path string, method string) bool {
+	if pmh.method != method {
+		return false
+	}
+
 	pathParts := strings.Split(path, "/")
 	parts := strings.Split(pmh.path, "/")
+
+	matches := true
 
 	if len(parts) == len(pathParts) {
 		for i := 0; i < len(parts); i++ {
 			if parts[i] != "{}" && parts[i] != pathParts[i] {
+				matches = false
 				break
 			}
 		}
-
-		if pmh.method == method {
-			return true
-		}
 	}
 
-	return false
+	return matches
 }
 
