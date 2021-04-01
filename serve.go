@@ -36,7 +36,11 @@ func (server UIServer) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 
 // handlerFor() finds the registered handler function, if any, for the given path and method.
 func (server UIServer) handlerFor(path string, method string) (pathMethodHandler, error) {
+	fmt.Println("uiserver.handlerFor() - looking for path =", path, "method =", method)
+
 	for _, item := range server.handlers {
+		fmt.Println("uiserver.handlerFor() - found path =", item.path, "method =", item.method)
+
 		if item.matchesPathAndMethod(path, method) {
 			return item, nil
 		}
