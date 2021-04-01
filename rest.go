@@ -1,6 +1,7 @@
 package uiserver
 
 import (
+	"fmt"
 	"regexp"
 )
 
@@ -41,6 +42,8 @@ func (server UIServer) addHandler(route string, method string, handler Handler) 
 	path := pathForRoute(route)
 
 	server.handlers = append(server.handlers, pathMethodHandler{route, path, method, handler})
+
+	fmt.Println("uiserver.addHandler() - after adding", method, "for", path, "handlers =", server.handlers)
 
 	server.mux.Handle(route, server)
 }
