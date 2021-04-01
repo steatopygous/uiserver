@@ -39,8 +39,8 @@ type Context struct {
 // New() constructs a new UIServer that uses the provided file system as the source for
 // the UI's content.  Using this, the developer will make calls to the various REST verb
 // functions to register handlers for the various resource paths the UI code can access.
-func New(ui fs.FS) UIServer {
-	root := getUIRoot(ui)
+func New(fs fs.FS) UIServer {
+	root := getUIRoot(fs)
 
 	var handlers []pathMethodHandler
 
@@ -65,25 +65,23 @@ func (server UIServer) Run(port string) error {
 }
 
 
-// getUIRoot() extracts the top-level folder from the UI file system.  This allows
-// all URLs referenced in the content to be relative to "/", rather than that folder.
+// getUIRoot() traverses the provided file system to find the UI content.
 func getUIRoot(ui fs.FS) fs.FS {
-	// We expect the top level of the file system to contain a single folder
-	// that contains all of the UI content, potentially in sub-folders.
+	// The content folder is the first folder that contains more
+	// than one file.
 
-	items, _ := fs.ReadDir(ui, ".")
+	for {
+		items, _ := fs.ReadDir(ui, ".")
 
-	if len(items) != 1 {
-		panic("the top level of the UI content file system can only contain a single folder")
+		if len(items) > 1 {
+			break
+		}
+
+		contentFolder := items[0].Name()
+
+		ui, _ = fs.Sub(ui, contentFolder)
 	}
 
-	contentFolder := items[0].Name()
-
-	// Since we want the UI content to be accessible as "/", we need to use
-	// the sub-folder as the root of our file system.
-
-	root, _ := fs.Sub(ui, contentFolder)
-
-	return root
+	return ui
 }
 
