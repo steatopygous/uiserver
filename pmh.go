@@ -22,17 +22,16 @@ func(pmh pathMethodHandler) matchesPathAndMethod(path string, method string) boo
 	pathParts := strings.Split(path, "/")
 	parts := strings.Split(pmh.path, "/")
 
-	matches := true
-
 	if len(parts) == len(pathParts) {
-		for i := 0; i < len(parts); i++ {
-			if parts[i] != "{}" && parts[i] != pathParts[i] {
-				matches = false
-				break
-			}
+		return false
+	}
+
+	for i := 0; i < len(parts); i++ {
+		if parts[i] != "{}" && parts[i] != pathParts[i] {
+			return false
 		}
 	}
 
-	return matches
+	return true
 }
 
