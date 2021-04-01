@@ -41,12 +41,7 @@ type Handler func(context Context)
 func (server *UIServer) addHandler(route string, method string, handler Handler) {
 	path := pathForRoute(route)
 
-	fmt.Println("uiserver.addHandler() - before adding", method, "for", path, "handlers =", server.handlers)
-
 	server.handlers = append(server.handlers, pathMethodHandler{route, path, method, handler})
-
-	fmt.Println("uiserver.addHandler() - after adding", method, "for", path, "handlers =", server.handlers)
-	fmt.Println("")
 
 	server.mux.Handle(route, server)
 }
