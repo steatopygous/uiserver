@@ -1,7 +1,6 @@
 package uiserver
 
 import (
-	"sort"
 	"strings"
 )
 
@@ -38,24 +37,23 @@ func(pmh pathMethodHandler) matchesPathAndMethod(path string, method string) boo
 	return true
 }
 
-func(handlers ByPrecedence) Sort() {
-	sort.Sort(handlers)
-}
 
-// Sorting implementation
 
+// ByPrecedence represents a slice of request handlers for purposes
+// of sorting by route precedence.
 type ByPrecedence []pathMethodHandler
 
+// Len() returns the length of a slice of handlers
 func (handlers ByPrecedence) Len() int {
 	return len(handlers)
 }
 
+// Less() determines the precedence of two handlers' routes
 func (handlers ByPrecedence) Less(i, j int) bool {
 	routeI := handlers[i].route
 	routeJ := handlers[j].route
 
-	// Routes with more parts are "less than" those
-	// with longer paths.
+	// Routes with more parts are "less than" those with longer paths.
 
 	partsI := strings.Split(routeI, "/")
 	partsJ := strings.Split(routeJ, "/")
@@ -68,8 +66,7 @@ func (handlers ByPrecedence) Less(i, j int) bool {
 		return false
 	}
 
-	// Routes that have no variables are "less than"
-	// those that do.
+	// Routes that have no variables are "less than" those that do.
 
 	hasVariablesI := hasVariables(routeI)
 	hasVariablesJ := hasVariables(routeJ)
@@ -87,10 +84,13 @@ func (handlers ByPrecedence) Less(i, j int) bool {
 	return false
 }
 
+// Swap() swaps two handlers in a slice, given their indices
+func (handlers ByPrecedence) Swap(i, j int) {
+	handlers[i], handlers[j] = handlers[j], handlers[i]
+}
+
+// hasVariables() determines whether a given route contains variables
 func hasVariables(route string) bool {
 	return strings.Contains(route, "{")
 }
 
-func (handlers ByPrecedence) Swap(i, j int) {
-	handlers[i], handlers[j] = handlers[j], handlers[i]
-}

@@ -1,7 +1,6 @@
 package uiserver
 
 import (
-	"fmt"
 	"io/fs"
 	"net/http"
 	"net/url"
@@ -60,7 +59,6 @@ func (server UIServer) Run(port string) error {
 	err := http.ListenAndServe(port, server.mux)
 
 	if err != nil {
-		fmt.Println("uiserver.Run() - ListenAndServe() returned an error...", err)
 		return err
 	}
 
@@ -89,10 +87,8 @@ func getUIRoot(ui fs.FS) fs.FS {
 }
 
 // sortHandlers() orders the handlers to ensure that more specific routes have
-// priority over less specific ones.  So, for example /api/todos/purge will take
-// precedence over /api/todos/{id}.
+// priority over less specific ones.  So, for example a POST to /api/todos/purge
+// will take precedence over /api/todos/{id}.
 func (server *UIServer) sortHandlers() {
-	fmt.Println("Before sorting handles =", server.handlers)
 	sort.Sort(ByPrecedence(server.handlers))
-	fmt.Println("After sorting handles =", server.handlers)
 }

@@ -37,7 +37,6 @@ func (server UIServer) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 func (server UIServer) handlerFor(path string, method string) (pathMethodHandler, error) {
 	for _, item := range server.handlers {
 		if item.matchesPathAndMethod(path, method) {
-			fmt.Println(path, method, "is handled by", item)
 			return item, nil
 		}
 	}
