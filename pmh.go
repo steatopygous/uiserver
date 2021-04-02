@@ -1,6 +1,9 @@
 package uiserver
 
-import "strings"
+import (
+	"sort"
+	"strings"
+)
 
 // pathMethodHandler collects together a route, path and method, along with the
 // handler function for the given route + method.
@@ -35,3 +38,59 @@ func(pmh pathMethodHandler) matchesPathAndMethod(path string, method string) boo
 	return true
 }
 
+func(handlers ByPrecedence) Sort() {
+	sort.Sort(handlers)
+}
+
+// Sorting implementation
+
+type ByPrecedence []pathMethodHandler
+
+func (handlers ByPrecedence) Len() int {
+	return len(handlers)
+}
+
+func (handlers ByPrecedence) Less(i, j int) bool {
+	routeI := handlers[i].route
+	routeJ := handlers[j].route
+
+	// Routes with more parts are "less than" those
+	// with longer paths.
+
+	partsI := strings.Split(routeI, "/")
+	partsJ := strings.Split(routeJ, "/")
+
+	if len(partsI) > len(partsJ) {
+		return true
+	}
+
+	if len(partsI) < len(partsJ) {
+		return false
+	}
+
+	// Routes that have no variables are "less than"
+	// those that do.
+
+	hasVariablesI := hasVariables(routeI)
+	hasVariablesJ := hasVariables(routeJ)
+
+	if hasVariablesI && !hasVariablesJ {
+		return false
+	}
+
+	if hasVariablesJ && !hasVariablesI {
+		return true
+	}
+
+	// In other cases, we don't care
+
+	return false
+}
+
+func hasVariables(route string) bool {
+	return strings.Contains(route, "{")
+}
+
+func (handlers ByPrecedence) Swap(i, j int) {
+	handlers[i], handlers[j] = handlers[j], handlers[i]
+}

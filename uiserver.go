@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"net/http"
 	"net/url"
+	"sort"
 
 	"github.com/gorilla/mux"
 )
@@ -52,6 +53,8 @@ func New(fs fs.FS) UIServer {
 
 // Run() starts the server running on the specified port.
 func (server UIServer) Run(port string) error {
+	server.sortHandlers()
+
 	server.mux.PathPrefix("/").Handler(http.FileServer(http.FS(server.root)))
 
 	err := http.ListenAndServe(port, server.mux)
@@ -85,3 +88,9 @@ func getUIRoot(ui fs.FS) fs.FS {
 	return ui
 }
 
+// sortHandlers() orders the handlers to ensure that more specific routes have
+// priority over less specific ones.  So, for example /api/todos/purge will take
+// precedence over /api/todos/{id}.
+func (server *UIServer) sortHandlers() {
+	sort.Sort(ByPrecedence(server.handlers))
+}

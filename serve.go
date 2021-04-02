@@ -21,16 +21,15 @@ func (server UIServer) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 		fmt.Println("Sorry, I don't know how to handle", method, "for path", path)
 
 		writer.WriteHeader(http.StatusInternalServerError)
-	} else {
-		path := request.URL.Path
-		method := request.Method
-		vars := mux.Vars(request)
-		query := request.URL.Query()
-
-		context := Context{item.route, method, path, vars, query, writer, request}
-
-		item.handler(context)
+		return
 	}
+
+	vars := mux.Vars(request)
+	query := request.URL.Query()
+
+	context := Context{item.route, method, path, vars, query, writer, request}
+
+	item.handler(context)
 }
 
 
