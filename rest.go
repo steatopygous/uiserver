@@ -24,7 +24,7 @@ func (server *UIServer) Patch(route string, handler Handler) {
 	server.addHandler(route, "PATCH", handler)
 }
 
-// Patch() registers a handler for PATCH calls on given route.
+// Delete() registers a handler for PATCH calls on given route.
 func (server *UIServer) Delete(route string, handler Handler) {
 	server.addHandler(route, "DELETE", handler)
 }
